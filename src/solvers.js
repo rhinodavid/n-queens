@@ -17,22 +17,31 @@
 
 window.findNRooksSolution = function(n) {
   // make container for solved boards
+  var solutions = [];
 
+  var buildSolutions = function(matrix) {
   // build our solutions -> input is blank nxn board
     // if board is solved (i.e. has n pieces on it AND has no conflicts
-      // push to solutions
-      // return
-    // if board has conflicts
-      // return
-    // otherwise
-      // use buildFutureBoard combos to get a list of all the future boards
-      // recurse with each of those future boards.
+    var board = new Board(matrix);
+    var hasConflicts = board.hasAnyRooksConflicts();
+    if (hasConflicts) {
+      return;
+    } 
+    if (!hasConflicts && board.numberOfPieces() === n) {
+      // found a solution
+      solutions.push(board);
+      return;
+    }
+    var futureBoardCombos = buildFutureBoardCombos(matrix);
+    futureBoardCombos.forEach(function(futureBoard) {
+      buildSolutions(futureBoard);
+    });
+  };
 
-
-  // grab the first one out of the container to be our solution
-
-
+  buildSolutions(makeEmptyMatrix(n));
+  var solution = solutions[0];
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  console.log('You found ' + solutions.length + ' solutions for this problem.\n\n');
   return solution;
 };
 
@@ -46,9 +55,32 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  // make container for solved boards
+  var solutions = [];
 
+  var buildSolutions = function(matrix) {
+  // build our solutions -> input is blank nxn board
+    // if board is solved (i.e. has n pieces on it AND has no conflicts
+    var board = new Board(matrix);
+    var hasConflicts = board.hasAnyQueensConflicts();
+    if (hasConflicts) {
+      return;
+    } 
+    if (!hasConflicts && board.numberOfPieces() === n) {
+      // found a solution
+      solutions.push(board);
+      return;
+    }
+    var futureBoardCombos = buildFutureBoardCombos(matrix);
+    futureBoardCombos.forEach(function(futureBoard) {
+      buildSolutions(futureBoard);
+    });
+  };
+
+  buildSolutions(makeEmptyMatrix(n));
+  var solution = solutions[0];
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  console.log('You found ' + solutions.length + ' solutions for this problem.\n\n');
   return solution;
 };
 
@@ -60,13 +92,13 @@ window.countNQueensSolutions = function(n) {
   return solutionCount;
 };
 
-var buildFutureBoardCombos = function(board) {
-  // input: board, [row, col] of last piece on the board
-  // output: an array of boards that has a new piece placed
+var buildFutureBoardCombos = function(matrix) {
+  // input: matrix, [row, col] of last piece on the matrix
+  // output: an array of matricies that has a new piece placed
   //          at each spot possible after last piece
 
   // flatten matrix ===> vector
-  var vector = _.flatten(board);
+  var vector = _.flatten(matrix);
   // search from the end until we find the 1 closest to the end ===> vectorIndex
   var vectorIndex = -1;
   for (var i = vector.length - 1; i >= 0; i--) {
