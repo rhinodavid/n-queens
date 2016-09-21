@@ -16,7 +16,21 @@
 
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  // make container for solved boards
+
+  // build our solutions -> input is blank nxn board
+    // if board is solved (i.e. has n pieces on it AND has no conflicts
+      // push to solutions
+      // return
+    // if board has conflicts
+      // return
+    // otherwise
+      // use buildFutureBoard combos to get a list of all the future boards
+      // recurse with each of those future boards.
+
+
+  // grab the first one out of the container to be our solution
+
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -45,3 +59,42 @@ window.countNQueensSolutions = function(n) {
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+var buildFutureBoardCombos = function(board) {
+  // input: board, [row, col] of last piece on the board
+  // output: an array of boards that has a new piece placed
+  //          at each spot possible after last piece
+
+  // flatten matrix ===> vector
+  var vector = _.flatten(board);
+  // search from the end until we find the 1 closest to the end ===> vectorIndex
+  var vectorIndex = -1;
+  for (var i = vector.length - 1; i >= 0; i--) {
+    if (vector[i] === 1 && vectorIndex === -1) {
+      vectorIndex = i;
+    }
+  }
+  // make container for future boards
+  var futureBoards = [];
+  // for each index from vectorIndex+1 to end
+  for (var k = vectorIndex + 1; k < vector.length; k++) {
+    var vectorCopy = vector.slice();
+    // splice in 1
+    vectorCopy[k] = 1;
+    // add to container for future boards
+    futureBoards.push(vectorCopy);
+  }
+  // return the map the container using reshape and n
+  return futureBoards.map(reshape);
+};
+
+
+
+
+
+
+
+
+
+
+
