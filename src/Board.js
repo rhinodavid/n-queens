@@ -80,7 +80,9 @@
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
       var row = this.rows()[rowIndex];
-      return row.reduce(function(memo, spot){return memo + spot}) > 1;
+      return row.reduce(function(memo, spot) {
+        return memo + spot;
+      }) > 1;
     },
 
     // test if any rows on this board contain conflicts
@@ -99,7 +101,9 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return this.rows().reduce(function(memo, row){return memo + row[colIndex];},0) > 1;
+      return this.rows().reduce(function(memo, row) {
+        return memo + row[colIndex];
+      }, 0) > 1;
     },
 
     // test if any columns on this board contain conflicts
@@ -126,7 +130,7 @@
         if (ind < 0 || ind > row.length - 1) {
           return memo;
         } else {
-          return memo + row[ind]
+          return memo + row[ind];
         }
       }, 0) > 1;
     },
@@ -182,15 +186,16 @@
 
   });
 
-  var makeEmptyMatrix = function(n) {
-    return _(_.range(n)).map(function() {
-      return _(_.range(n)).map(function() {
-        return 0;
-      });
-    });
-  };
 
 }());
+
+var makeEmptyMatrix = function(n) {
+  return _(_.range(n)).map(function() {
+    return _(_.range(n)).map(function() {
+      return 0;
+    });
+  });
+};
 
 var reshape = function(vector) {
   var result = [];
