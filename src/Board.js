@@ -185,3 +185,16 @@
   };
 
 }());
+
+  var reshape = function(vector, n) {
+    var result = [];
+    var pos = 0;
+    for (var i = 0; i < n; i++) {
+      result[i] = [];
+      for (var j = 0; j < n; j++) {
+        result[i][j] = vector[pos];
+        pos++;
+      }
+    }
+    return result;
+  };
