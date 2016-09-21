@@ -163,7 +163,7 @@
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
       var n = this.get('n');
-      for (var i = 0; i < (2*n-1); i++) {
+      for (var i = 0; i < (2 * n - 1); i++) {
         if (this.hasMinorDiagonalConflictAt(i)) {
           return true;
         }
@@ -186,15 +186,16 @@
 
 }());
 
-  var reshape = function(vector, n) {
-    var result = [];
-    var pos = 0;
-    for (var i = 0; i < n; i++) {
-      result[i] = [];
-      for (var j = 0; j < n; j++) {
-        result[i][j] = vector[pos];
-        pos++;
-      }
+var reshape = function(vector) {
+  var result = [];
+  var n = Math.sqrt(vector.length);
+  var pos = 0;
+  for (var i = 0; i < n; i++) {
+    result[i] = [];
+    for (var j = 0; j < n; j++) {
+      result[i][j] = vector[pos];
+      pos++;
     }
-    return result;
-  };
+  }
+  return result;
+};
