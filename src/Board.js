@@ -169,6 +169,12 @@
         }
       }
       return false;
+    },
+
+    numberOfPieces: function() {
+      var rows = this.rows();
+      var vector = _.flatten(rows);
+      return vector.reduce(function(memo, item) { return memo + item; });
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
