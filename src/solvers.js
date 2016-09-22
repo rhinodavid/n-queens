@@ -112,6 +112,6 @@ window.countNQueensSolutionsAsync = function(n, cb) {
     var numSolutions = e.data;
     var error = null;
     var timeEnd = Date.now();
-    cb(error, ('Number of solutions for ' + n + ' queens:' + numSolutions + ' worker finished in ' + (timeEnd - timeStart) + 'ms'), timeEnd);
+    cb(error, ('Number of solutions for ' + n + ' queens:' + numSolutions + ' worker finished in ' + (timeEnd - timeStart) + 'ms'), timeEnd, n);
   };
 };

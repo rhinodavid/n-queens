@@ -30,6 +30,7 @@
     <script src="src/liteBoard.js"></script>
     <script src="src/BoardView.js"></script>
     <script src="src/solvers.js"></script>
+    <script src="src/NumQueensWorker.js"></script>
     <script>
       // This function uses a board visualizer lets you view an interactive version of any piece matrix.
       window.displayBoard = function(matrix){
@@ -47,13 +48,33 @@
           [1, 0, 0, 0],
           [0, 0, 1, 0]
         ]);
-        console.time('sixqueens');
-        var n = 6;
-        findNRooksSolution(n);
-        countNRooksSolutions(n);
-        findNQueensSolution(n);
-        countNQueensSolutions(n);
-        console.timeEnd('sixqueens');
+        console.time('Total time for all solutions: ');
+        var n = 12;
+        //findNRooksSolution(n);
+        // countNRooksSolutions(n);
+        //findNQueensSolution(n);
+        for (var i = 0; i <= n; i++) {
+          console.time('n = ' + i);
+          countNQueensSolutions(i);
+          console.timeEnd('n = ' + i);
+
+        }
+        console.timeEnd('Total time for all solutions: ');
+
+        // async
+        var asyncTimeStart = Date.now();
+        for (var i = 0; i <= n; i++) { 
+          countNQueensSolutionsAsync(i, function(e, data, timeEnd, n) {
+            if (e) {
+              console.log('Error');
+            } else {
+              console.log(data);
+              console.log('Total Async Time for ' + n + ' solutions: ' + (timeEnd - asyncTimeStart) + 'ms');
+            }
+          });
+        };
+        
+       
       });
     </script>
   </body>
