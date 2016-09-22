@@ -19,19 +19,48 @@ window.findNRooksSolution = function(n) {
   // make container for solved boards
   var solutions = [];
 
+  var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'rook');
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRookConflictsOnLastPiece');
-  var solution = solutions[0];
+  var buildBoards = function(liteBoard, n) {
+    if (liteBoard.pieces === n) {
+      solutions.push(liteBoard);
+    } else {
+      var childBoards = liteBoard.generateValidChildBoards();
+      childBoards.forEach(function(childBoard) {
+        buildBoards(childBoard, n);
+      });
+    }
+  };
+
+  buildBoards(blankBoard, n);
+
+  var solution = new Board(solutions[0].matrix);
+  console.log('Num found: ', solutions.length);
+
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-    // make container for solved boards
+  // make container for solved boards
   var solutions = [];
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRookConflictsOnLastPiece');
+  var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'rook');
+
+  var buildBoards = function(liteBoard, n) {
+    if (liteBoard.pieces === n) {
+      solutions.push(liteBoard);
+    } else {
+      var childBoards = liteBoard.generateValidChildBoards();
+      childBoards.forEach(function(childBoard) {
+        buildBoards(childBoard, n);
+      });
+    }
+  };
+
+  buildBoards(blankBoard, n);
+
   var solutionCount = solutions.length;
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -42,60 +71,56 @@ window.findNQueensSolution = function(n) {
   // make container for solved boards
   var solutions = [];
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueenConflictsOnLastPiece');
-  var solution = solutions[0];
+  var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'queen');
+
+  var buildBoards = function(liteBoard, n) {
+    if (liteBoard.pieces === n) {
+      solutions.push(liteBoard);
+    } else {
+      var childBoards = liteBoard.generateValidChildBoards();
+      childBoards.forEach(function(childBoard) {
+        buildBoards(childBoard, n);
+      });
+    }
+  };
+
+  buildBoards(blankBoard, n);
+
+  var solution = new Board(solutions[0].matrix);
+
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
+
+
+
+
+
+
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-// make container for solved boards
+  // make container for solved boards
   var solutions = [];
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueenConflictsOnLastPiece');
+  var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'queen');
+
+  var buildBoards = function(liteBoard, n) {
+    if (liteBoard.pieces === n) {
+      solutions.push(liteBoard);
+    } else {
+      var childBoards = liteBoard.generateValidChildBoards();
+      childBoards.forEach(function(childBoard) {
+        buildBoards(childBoard, n);
+      });
+    }
+  };
+
+  buildBoards(blankBoard, n);
+
   var solutionCount = solutions.length;
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
-};
-
-var buildFutureBoardCombos = function(matrix) {
-  // input: matrix, [row, col] of last piece on the matrix
-  // output: an array of matricies that has a new piece placed
-  //          at each spot possible after last piece
-
-  // flatten matrix ===> vector
-  var vector = _.flatten(matrix);
-  // search from the end until we find the 1 closest to the end ===> vectorIndex
-  var vectorIndex = -1;
-  for (var i = vector.length - 1; i >= 0; i--) {
-    if (vector[i] === 1 && vectorIndex === -1) {
-      vectorIndex = i;
-    }
-  }
-  // make container for future boards
-  var n = matrix[0].length;
-  var futureBoards = [];
-  var col = vectorIndex % n;
-  var row = Math.floor(vectorIndex / n);
-  // for each index from vectorIndex+1 to end
-  for (var k = vectorIndex + 1; k < vector.length; k++) {
-
-    //Checks if k has conflict in row or column with previous piece vector Index.
-    var currCol = k % n;
-    var currRow = Math.floor(k / n);
-    if (col === currCol || row === currRow) {
-      continue;
-    }
-
-    var vectorCopy = vector.slice();
-    // splice in 1
-    vectorCopy[k] = 1;
-    // add to container for future boards
-    futureBoards.push(vectorCopy);
-  }
-  // return the map the container using reshape and n
-  return futureBoards.map(reshape);
 };
 
 var buildSolutions = function(matrix, solutions, conflictsFunctionName) {
@@ -116,8 +141,6 @@ var buildSolutions = function(matrix, solutions, conflictsFunctionName) {
     buildSolutions(futureBoard, solutions, conflictsFunctionName);
   });
 };
-
-
 
 
 
