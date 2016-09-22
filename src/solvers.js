@@ -20,7 +20,7 @@ window.findNRooksSolution = function(n) {
   var solutions = [];
 
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRooksConflicts');
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRookConflictsOnLastPiece');
   var solution = solutions[0];
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -31,7 +31,7 @@ window.countNRooksSolutions = function(n) {
     // make container for solved boards
   var solutions = [];
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRooksConflicts');
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRookConflictsOnLastPiece');
   var solutionCount = solutions.length;
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -42,7 +42,7 @@ window.findNQueensSolution = function(n) {
   // make container for solved boards
   var solutions = [];
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueensConflicts');
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueenConflictsOnLastPiece');
   var solution = solutions[0];
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
@@ -53,7 +53,7 @@ window.countNQueensSolutions = function(n) {
 // make container for solved boards
   var solutions = [];
 
-  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueensConflicts');
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueenConflictsOnLastPiece');
   var solutionCount = solutions.length;
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
@@ -74,9 +74,20 @@ var buildFutureBoardCombos = function(matrix) {
     }
   }
   // make container for future boards
+  var n = matrix[0].length;
   var futureBoards = [];
+  var col = vectorIndex % n;
+  var row = Math.floor(vectorIndex / n);
   // for each index from vectorIndex+1 to end
   for (var k = vectorIndex + 1; k < vector.length; k++) {
+
+    //Checks if k has conflict in row or column with previous piece vector Index.
+    var currCol = k % n;
+    var currRow = Math.floor(k / n);
+    if (col === currCol || row === currRow) {
+      continue;
+    }
+
     var vectorCopy = vector.slice();
     // splice in 1
     vectorCopy[k] = 1;

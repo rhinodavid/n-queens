@@ -179,6 +179,38 @@
       var rows = this.rows();
       var vector = _.flatten(rows);
       return vector.reduce(function(memo, item) { return memo + item; });
+    },
+
+    findLastPiece: function() {
+      var vector = _.flatten(this.rows());
+      // search from the end until we find the 1 closest to the end ===> vectorIndex
+      var vectorIndex = -1;
+      for (var i = vector.length - 1; i >= 0; i--) {
+        if (vector[i] === 1 && vectorIndex === -1) {
+          vectorIndex = i;
+        }
+      }
+      if (vectorIndex === -1) { return null; }
+      var n = this.get('n');
+      var row = Math.floor(vectorIndex / n);
+      var col = vectorIndex % n;
+      return [row, col];
+    },
+
+    hasAnyQueenConflictsOnLastPiece: function() {
+      var coord = this.findLastPiece();
+      if (coord === null) {
+        return false;
+      }
+      return this.hasAnyQueenConflictsOn(coord[0], coord[1]);
+    },
+
+    hasAnyRookConflictsOnLastPiece: function() {
+      var coord = this.findLastPiece();
+      if (coord === null) {
+        return false;
+      }
+      return this.hasRowConflictAt(coord[0]) || this.hasColConflictAt(coord[1]);
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
