@@ -19,26 +19,8 @@ window.findNRooksSolution = function(n) {
   // make container for solved boards
   var solutions = [];
 
-  var buildSolutions = function(matrix) {
-  // build our solutions -> input is blank nxn board
-    // if board is solved (i.e. has n pieces on it AND has no conflicts
-    var board = new Board(matrix);
-    var hasConflicts = board.hasAnyRooksConflicts();
-    if (hasConflicts) {
-      return;
-    } 
-    if (!hasConflicts && board.numberOfPieces() === n) {
-      // found a solution
-      solutions.push(board);
-      return;
-    }
-    var futureBoardCombos = buildFutureBoardCombos(matrix);
-    futureBoardCombos.forEach(function(futureBoard) {
-      buildSolutions(futureBoard);
-    });
-  };
 
-  buildSolutions(makeEmptyMatrix(n));
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRooksConflicts');
   var solution = solutions[0];
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -49,26 +31,7 @@ window.countNRooksSolutions = function(n) {
     // make container for solved boards
   var solutions = [];
 
-  var buildSolutions = function(matrix) {
-  // build our solutions -> input is blank nxn board
-    // if board is solved (i.e. has n pieces on it AND has no conflicts
-    var board = new Board(matrix);
-    var hasConflicts = board.hasAnyRooksConflicts();
-    if (hasConflicts) {
-      return;
-    } 
-    if (!hasConflicts && board.numberOfPieces() === n) {
-      // found a solution
-      solutions.push(board);
-      return;
-    }
-    var futureBoardCombos = buildFutureBoardCombos(matrix);
-    futureBoardCombos.forEach(function(futureBoard) {
-      buildSolutions(futureBoard);
-    });
-  };
-
-  buildSolutions(makeEmptyMatrix(n));
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyRooksConflicts');
   var solutionCount = solutions.length;
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -79,26 +42,7 @@ window.findNQueensSolution = function(n) {
   // make container for solved boards
   var solutions = [];
 
-  var buildSolutions = function(matrix) {
-  // build our solutions -> input is blank nxn board
-    // if board is solved (i.e. has n pieces on it AND has no conflicts
-    var board = new Board(matrix);
-    var hasConflicts = board.hasAnyQueensConflicts();
-    if (hasConflicts) {
-      return;
-    } 
-    if (!hasConflicts && board.numberOfPieces() === n) {
-      // found a solution
-      solutions.push(board);
-      return;
-    }
-    var futureBoardCombos = buildFutureBoardCombos(matrix);
-    futureBoardCombos.forEach(function(futureBoard) {
-      buildSolutions(futureBoard);
-    });
-  };
-
-  buildSolutions(makeEmptyMatrix(n));
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueensConflicts');
   var solution = solutions[0];
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
@@ -109,26 +53,7 @@ window.countNQueensSolutions = function(n) {
 // make container for solved boards
   var solutions = [];
 
-  var buildSolutions = function(matrix) {
-  // build our solutions -> input is blank nxn board
-    // if board is solved (i.e. has n pieces on it AND has no conflicts
-    var board = new Board(matrix);
-    var hasConflicts = board.hasAnyQueensConflicts();
-    if (hasConflicts) {
-      return;
-    } 
-    if (!hasConflicts && board.numberOfPieces() === n) {
-      // found a solution
-      solutions.push(board);
-      return;
-    }
-    var futureBoardCombos = buildFutureBoardCombos(matrix);
-    futureBoardCombos.forEach(function(futureBoard) {
-      buildSolutions(futureBoard);
-    });
-  };
-
-  buildSolutions(makeEmptyMatrix(n));
+  buildSolutions(makeEmptyMatrix(n), solutions, 'hasAnyQueensConflicts');
   var solutionCount = solutions.length;
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
@@ -162,7 +87,24 @@ var buildFutureBoardCombos = function(matrix) {
   return futureBoards.map(reshape);
 };
 
-
+var buildSolutions = function(matrix, solutions, conflictsFunctionName) {
+  // build our solutions -> input is blank nxn board
+    // if board is solved (i.e. has n pieces on it AND has no conflicts
+  var board = new Board(matrix);
+  var hasConflicts = board[conflictsFunctionName]();
+  if (hasConflicts) {
+    return;
+  } 
+  if (!hasConflicts && board.numberOfPieces() === board.get('n')) {
+    // found a solution
+    solutions.push(board);
+    return;
+  }
+  var futureBoardCombos = buildFutureBoardCombos(matrix);
+  futureBoardCombos.forEach(function(futureBoard) {
+    buildSolutions(futureBoard, solutions, conflictsFunctionName);
+  });
+};
 
 
 
