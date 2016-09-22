@@ -43,7 +43,7 @@ LiteBoard.prototype.generateValidChildBoards = function() {
   var validBoards = [];
 
   for (var i = 0; i < this.availableVI.length; i++) {
-    if (this.availableVI[i] > this.prevVI) {
+    if (Math.floor(this.availableVI[i]/this.n) - Math.floor(this.prevVI/this.n) === 1) {
       validBoards.push(this.addPieceAt(this.availableVI[i]));
     }
   }
