@@ -95,3 +95,23 @@ var buildOneBoard = function(liteBoard, n, solutions) {
     });
   }
 };
+
+
+//////////////////////// ASYNC ///////////////////////////////////
+
+window.countNQueensSolutionsAsync = function(n, cb) {
+  // start timer
+  var timeStart = Date.now();
+
+  // create the worker
+  var numQueensWorker = new Worker('src/NumQueensWorker.js');
+  // send the worker its job
+  numQueensWorker.postMessage(n);
+
+  numQueensWorker.onmessage = function(e) {
+    var numSolutions = e.data;
+    var error = null;
+    var timeEnd = Date.now();
+    cb(error, ('Number of solutions for ' + n + ' queens:' + numSolutions + ' worker finished in ' + (timeEnd - timeStart) + 'ms'), timeEnd);
+  };
+};
