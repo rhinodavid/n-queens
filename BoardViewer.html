@@ -27,6 +27,7 @@
     <script src="lib/underscore.js"></script>
     <script src="lib/backbone.js"></script>
     <script src="src/Board.js"></script>
+    <script src="src/liteBoard.js"></script>
     <script src="src/BoardView.js"></script>
     <script src="src/solvers.js"></script>
     <script>
@@ -46,12 +47,13 @@
           [1, 0, 0, 0],
           [0, 0, 1, 0]
         ]);
-
-        var n = 4;
+        console.time('sixqueens');
+        var n = 6;
         findNRooksSolution(n);
         countNRooksSolutions(n);
         findNQueensSolution(n);
         countNQueensSolutions(n);
+        console.timeEnd('sixqueens');
       });
     </script>
   </body>
