@@ -21,21 +21,23 @@ window.findNRooksSolution = function(n) {
 
   var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'rook');
 
-  var buildBoards = function(liteBoard, n) {
-    if (liteBoard.pieces === n) {
+  var buildOneBoard = function(liteBoard, n) {
+    if (solutions.length > 0) {
+      return;
+    } else if (liteBoard.pieces === n) {
       solutions.push(liteBoard);
+      return;
     } else {
       var childBoards = liteBoard.generateValidChildBoards();
       childBoards.forEach(function(childBoard) {
-        buildBoards(childBoard, n);
+        buildOneBoard(childBoard, n);
       });
     }
   };
 
-  buildBoards(blankBoard, n);
+  buildOneBoard(blankBoard, n);
 
-  var solution = new Board(solutions[0].matrix);
-  console.log('Num found: ', solutions.length);
+  var solution = solutions[0].matrix;
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -70,23 +72,27 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   // make container for solved boards
   var solutions = [];
-
+  if (n === 0 || n === 2 || n === 3) {
+    return makeEmptyMatrix(n);
+  }
   var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'queen');
 
-  var buildBoards = function(liteBoard, n) {
-    if (liteBoard.pieces === n) {
+  var buildOneBoard = function(liteBoard, n) {
+    if (solutions.length > 0) {
+      return;
+    } else if (liteBoard.pieces === n) {
       solutions.push(liteBoard);
+      return;
     } else {
       var childBoards = liteBoard.generateValidChildBoards();
       childBoards.forEach(function(childBoard) {
-        buildBoards(childBoard, n);
+        buildOneBoard(childBoard, n);
       });
     }
   };
 
-  buildBoards(blankBoard, n);
-
-  var solution = new Board(solutions[0].matrix);
+  buildOneBoard(blankBoard, n);
+  var solution = solutions[0].matrix;
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
@@ -100,6 +106,12 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
+  if (n === 2 || n === 3) {
+    return 0;
+  }
+  if (n === 0) {
+    return 1;
+  }
   // make container for solved boards
   var solutions = [];
 
@@ -122,29 +134,3 @@ window.countNQueensSolutions = function(n) {
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
-
-var buildSolutions = function(matrix, solutions, conflictsFunctionName) {
-  // build our solutions -> input is blank nxn board
-    // if board is solved (i.e. has n pieces on it AND has no conflicts
-  var board = new Board(matrix);
-  var hasConflicts = board[conflictsFunctionName]();
-  if (hasConflicts) {
-    return;
-  } 
-  if (!hasConflicts && board.numberOfPieces() === board.get('n')) {
-    // found a solution
-    solutions.push(board);
-    return;
-  }
-  var futureBoardCombos = buildFutureBoardCombos(matrix);
-  futureBoardCombos.forEach(function(futureBoard) {
-    buildSolutions(futureBoard, solutions, conflictsFunctionName);
-  });
-};
-
-
-
-
-
-
-
