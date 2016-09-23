@@ -106,7 +106,7 @@ countNQueensSolutionsAsync = function(n, cb) {
   // create the worker
   var numWorker = new Worker('src/NumCountWorker.js');
   // send the worker its job
-  numWorker.postMessage({n:n, countFunctionName:'countNQueensSolutions'});
+  numWorker.postMessage({n: n, countFunctionName: 'countNQueensSolutions'});
 
   numWorker.onmessage = function(e) {
     var numSolutions = e.data;
@@ -119,11 +119,11 @@ countNQueensSolutionsAsync = function(n, cb) {
 countNRooksSolutionsAsync = function(n, cb) {
   // start timer
   var timeStart = Date.now();
-
+  
   // create the worker
   var numWorker = new Worker('src/NumCountWorker.js');
   // send the worker its job
-  numWorker.postMessage({n:n, countFunctionName:'countNRooksSolutions'});
+  numWorker.postMessage({n: n, countFunctionName: 'countNRooksSolutions'});
 
   numWorker.onmessage = function(e) {
     var numSolutions = e.data;
