@@ -15,7 +15,7 @@
 
 
 
-window.findNRooksSolution = function(n) {
+findNRooksSolution = function(n) {
   var solutions = [];
 
   var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'rook');
@@ -27,7 +27,7 @@ window.findNRooksSolution = function(n) {
   return solution;
 };
 
-window.countNRooksSolutions = function(n) {
+countNRooksSolutions = function(n) {
   var solutions = [];
 
   var blankBoard = new LiteBoard(makeEmptyMatrix(n), 'rook');
@@ -39,7 +39,7 @@ window.countNRooksSolutions = function(n) {
   return solutionCount;
 };
 
-window.findNQueensSolution = function(n) {
+findNQueensSolution = function(n) {
   var solutions = [];
   if (n === 0 || n === 2 || n === 3) {
     return makeEmptyMatrix(n);
@@ -53,7 +53,7 @@ window.findNQueensSolution = function(n) {
   return solution;
 };
 
-window.countNQueensSolutions = function(n) {
+countNQueensSolutions = function(n) {
   if (n === 2 || n === 3) {
     return 0;
   }
@@ -99,19 +99,36 @@ var buildOneBoard = function(liteBoard, n, solutions) {
 
 //////////////////////// ASYNC ///////////////////////////////////
 
-window.countNQueensSolutionsAsync = function(n, cb) {
+countNQueensSolutionsAsync = function(n, cb) {
   // start timer
   var timeStart = Date.now();
 
   // create the worker
-  var numQueensWorker = new Worker('src/NumQueensWorker.js');
+  var numWorker = new Worker('src/NumCountWorker.js');
   // send the worker its job
-  numQueensWorker.postMessage(n);
+  numWorker.postMessage({n:n, countFunctionName:'countNQueensSolutions'});
 
-  numQueensWorker.onmessage = function(e) {
+  numWorker.onmessage = function(e) {
     var numSolutions = e.data;
     var error = null;
     var timeEnd = Date.now();
     cb(error, ('Number of solutions for ' + n + ' queens:' + numSolutions + ' worker finished in ' + (timeEnd - timeStart) + 'ms'), timeEnd, n);
+  };
+};
+
+countNRooksSolutionsAsync = function(n, cb) {
+  // start timer
+  var timeStart = Date.now();
+
+  // create the worker
+  var numWorker = new Worker('src/NumCountWorker.js');
+  // send the worker its job
+  numWorker.postMessage({n:n, countFunctionName:'countNRooksSolutions'});
+
+  numWorker.onmessage = function(e) {
+    var numSolutions = e.data;
+    var error = null;
+    var timeEnd = Date.now();
+    cb(error, ('Number of solutions for ' + n + ' rooks:' + numSolutions + ' worker finished in ' + (timeEnd - timeStart) + 'ms'), timeEnd, n);
   };
 };

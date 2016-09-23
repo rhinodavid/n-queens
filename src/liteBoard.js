@@ -1,9 +1,9 @@
 var LiteBoard = function LiteBoard(matrix, pieceType, pieces, prevVI, availableVI) {
   this.matrix = matrix;
-  this.n = matrix[0].length;
+  this.n = matrix.length;
   this.pieces = pieces || 0;
   this.prevVI = prevVI === undefined ? -1 : prevVI;
-  this.availableVI = availableVI || _.range(this.n * this.n);
+  this.availableVI = availableVI || range(this.n * this.n);
   this.pieceType = pieceType;
 };
 
@@ -43,10 +43,26 @@ LiteBoard.prototype.generateValidChildBoards = function() {
   var validBoards = [];
 
   for (var i = 0; i < this.availableVI.length; i++) {
-    if (Math.floor(this.availableVI[i]/this.n) - Math.floor(this.prevVI/this.n) === 1) {
+    if (Math.floor(this.availableVI[i] / this.n) - Math.floor(this.prevVI / this.n) === 1) {
       validBoards.push(this.addPieceAt(this.availableVI[i]));
     }
   }
 
   return validBoards;
+};
+
+var makeEmptyMatrix = function(n) {
+  return (range(n)).map(function() {
+    return (range(n)).map(function() {
+      return 0;
+    });
+  });
+};
+
+var range = function range(n) {
+  var result = [];
+  for (var i = 0; i < n; i++) {
+    result.push(i);
+  }
+  return result;
 };
